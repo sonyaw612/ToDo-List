@@ -24,6 +24,7 @@ router.get('/', (req, res) =>{
 // creates a new entry in the TASK table
 router.post('/create', (req, res) => {
 
+    console.log('Request to make task: ' + req.body.task)
     const data = req.body;
     tasks.create({
         task: req.body.task,
@@ -44,13 +45,17 @@ router.delete('/delete/:id', (req, res) => {
     .catch(err => {res.status(404).send( err.message )})
 })
 
-router.put('/edit/:taskid', (req, res) => {
+router.put('/edit/:id', (req, res) => {
+    console.log('Request received for edit task: ' + req.body.task)
     tasks.update({
         task: req.body.task,
+        completed: req.body.completed
     },{
-        where: { id: req.params.taskid 
+        where: { id: req.params.id 
     }})
     .then((data) => {
+        console.log(data)
+
         res.status(200).send("Update successful")
     })
     .catch(err => { res.status(404).send(err.message)})

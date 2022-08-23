@@ -1,0 +1,60 @@
+button {
+    justify-content: center;
+    text-align: center;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.taskCard {
+}
+
+.completeButton {
+    color: white;
+    background-color: green;
+    border-width: 0.5px;
+}
+
+.deleteButton {
+    background: red;
+    color: white;
+    border-width: 0.5px;
+}
+
+.editButton {
+    border-color: black;
+    color: black;
+    border-width: 0.5px;
+}
+
+.row {
+    border: 1px;
+    border-bottom-style: solid;
+    /* border-right-style: solid; */
+    border-radius: 3%;
+    flex-direction: row;
+    padding: 20px;
+    margin: 10px;
+    margin-bottom: 30px;
+    text-align: center;
+    justify-content: center;
+}
+
+.textSubmission {
+    width: 70%;
+    margin-right: 20px;
+}
+
+.taskValue {
+    font-size: 23px;
+    justify-content: center;
+    text-align: center;
+}
+
+.col- {
+    margin-right: 1%;
+}
+
+.actionButton {
+    justify-content: right;
+    float: right;
+}
