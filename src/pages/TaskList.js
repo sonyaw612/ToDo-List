@@ -4,58 +4,50 @@ import axios from 'axios';
 
 class TaskList extends React.Component {
     state = {
-        tasks: [],
-        listOfTasks: [],
+        // tasks: [],
+        listOfTasks: [], // typically use 1 array
         newTask: ''
     }
 
     async componentDidMount(){
         const url = "http://localhost:8080/"
 
-        console.log('CALL ONCE')
+        console.log('WINDOW START')
         try{
             await fetch(url)
             .then(res => res.json())
             .then(jsonData => {
                 console.log(jsonData)
-                this.setState({ tasks: jsonData })
-                for(let i in this.state.tasks){
-                    console.log(this.state.tasks[i]);
-                    this.state.listOfTasks = this.state.listOfTasks.concat(<TaskCard card = {this.state.tasks[i]} key={this.state.tasks[i].id}/>)
-                }
+                this.setState({ listOfTasks: jsonData })
                 console.log('*---- Request fulfilled ----*\n')
-
-                // this.state.listOfTasks = this._sortTasks(this.state.listOfTasks.slice())
-                // this.state.listOfTasks = this.state.listOfTasks.sort(function(task1, task2) {
-                //     let bool1 = task1.completed
-                //     let bool2 = task2.completed
-                //     if(bool1 === bool2) return 0
-                //     else if(bool1 > bool2) return 1
-                //     else return -1
-                // })
-            })
+            }) 
+            .catch(err => console.log(err))
         } catch(err){
-            console.log(err)
+            console.log(err) // should somehow show users an error occured
         }
     }
 
-    _sortTasks(data) {
-        // var sortedTasks = data.sort(fuction(task1, task2) => {
-            // const task1Bool = (task1.completed);
-
-            // return {task1.completed} - {task2.completed};
-        // })
+    reloadTask = (event) => {
+        const url = 'http://localhost:8080/'
+        fetch(url)
+        .then(res => res.json())
+        .then(jsonData => {
+            console.log(jsonData)
+            this.setState({ listOfTasks: jsonData })
+            console.log('*---- Request fulfilled ----*\n')
+        }) 
+        .catch(err => console.log(err))
     }
 
     handleCreateTask = (event) => {
         event.preventDefault()
-        const url = "http://localhost:8080/create"
-        console.log('hello')
+        const url = "http://localhost:8080/"
         axios.post(url, {
             task: this.state.newTask
         })
         .then(() =>{
-            window.location.reload()
+            document.getElementById('newTask').value = '' // when a user submits a value, the text value will 'reset'
+            this.reloadTask() //window.location.reload() // bad when data is large. Instead call api and update state
         })
         .catch(err => console.log(err))
     }
@@ -75,7 +67,11 @@ class TaskList extends React.Component {
                 </form>
                 <br/> <br/>
 
-                {this.state.listOfTasks}
+                {this.state.listOfTasks.map((task) => {
+                    console.log(task);
+                    return (<TaskCard card={task} key={task.id} onChange={this.reloadTask.bind(this)}/>)
+                })}
+
             </div>
         )
     }

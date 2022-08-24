@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
-const autoIncrement = require('id-auto-increment')
 const { tasks } = require('../models/tasks')
 
 // get all values in TASKS table
@@ -21,11 +20,10 @@ router.get('/', (req, res) =>{
     })
 })
 
-// creates a new entry in the TASK table
-router.post('/create', (req, res) => {
+// creates a new entry in the TASKS table ; should not use 'create' but rather use '/'
+router.post('/', (req, res) => {
 
     console.log('Request to make task: ' + req.body.task)
-    const data = req.body;
     tasks.create({
         task: req.body.task,
         completed: false
@@ -33,19 +31,19 @@ router.post('/create', (req, res) => {
     .then((data) => {
         res.status(201).send("Entry creation success")})
     .catch(err => {res.status(404).send( err.message )})
-;
 })
 
-// delete the task with the specified task id
-router.delete('/delete/:id', (req, res) => {
-    tasks.destroy({ where: { id: req.params.id }, restartIdentity: true })
+// delete the task with the specified task id ; standard: '/:id'
+router.delete('/:id', (req, res) => {
+    tasks.destroy({ where: { id: req.params.id }})
     .then(() => {
         res.status(200).send("Deletion completed")
     })
     .catch(err => {res.status(404).send( err.message )})
 })
 
-router.put('/edit/:id', (req, res) => {
+// edit the task with the specified id
+router.put('/:id', (req, res) => {
     console.log('Request received for edit task: ' + req.body.task)
     tasks.update({
         task: req.body.task,
@@ -61,5 +59,7 @@ router.put('/edit/:id', (req, res) => {
     .catch(err => { res.status(404).send(err.message)})
 })
 
+// put, delete, patch uses '/:id'
+// if an entry is expected to be in the db its '/:id'
 
 module.exports = router;

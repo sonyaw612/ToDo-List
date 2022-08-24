@@ -9,7 +9,6 @@ class TaskCard extends React.Component {
         task: this.props.card.task,
         completed: this.props.card.completed,
         edit: false,
-        // taskPH: '', // task place holder
     }
 
     onEdit = (props) => {
@@ -22,7 +21,7 @@ class TaskCard extends React.Component {
 
         // event.preventDefault()
         console.log('Button id: ' + event.currentTarget.id + '...')
-        const url = 'http://localhost:8080/edit/' + this.props.card.id
+        const url = 'http://localhost:8080/' + this.props.card.id
         const newTask = this.state.task
         console.log('Handling submit with: ' + newTask + '...')
 
@@ -31,17 +30,17 @@ class TaskCard extends React.Component {
         })
         .then(res => {
             if(res.ok) { console.log('Task edit successful') }
-            window.location.reload()
+            this.props.onChange()
         })
         .catch(err => console.log(err))
     }
 
     onDelete = (event) => {
-        const url = 'http://localhost:8080/delete/' + this.props.card.id
+        const url = 'http://localhost:8080/' + this.props.card.id
         axios.delete(url)
         .then(res => {
             if(res.ok) { console.log('Deletion successful') }
-            window.location.reload()
+            this.props.onChange()
         })
     }
 
@@ -51,9 +50,9 @@ class TaskCard extends React.Component {
     }
 
     // if complete or incomplete button is clicked
-    onComplete = (event) => {
+    handleCompleteStatus = (event) => {
         event.preventDefault()
-        const url = 'http://localhost:8080/edit/' + this.props.card.id
+        const url = 'http://localhost:8080/' + this.props.card.id
         const updateCompletion = this.props.card.completed? (false):(true)
 
         axios.put(url, { 
@@ -61,7 +60,7 @@ class TaskCard extends React.Component {
         })
         .then(res => {
             if(res.ok) { console.log('Task edit successful') }
-            window.location.reload()
+            this.props.onChange()
         })
         .catch(err => console.log(err))
     }
@@ -89,7 +88,7 @@ class TaskCard extends React.Component {
                         <span>{ this.props.card.completed? (<p className='taskValue' style={{ textDecoration:'line-through', color: 'grey'}}>{ this.props.card.task }</p>) : (<p className='taskValue'>{ this.props.card.task }</p>) }</span>
                         </div>
                         <div className='col-'>
-                            { this.props.card.completed? (<div><button className='incompleteButton' onClick={this.onComplete}>Incomplete</button></div>) : (<button className='completeButton' onClick={this.onComplete}>Completed</button>) }
+                            { this.props.card.completed? (<div><button className='incompleteButton' onClick={this.handleCompleteStatus}>Incomplete</button></div>) : (<button className='completeButton' onClick={this.handleCompleteStatus}>Completed</button>) }
                         </div>
                         <div className='col-'>
                             <button className='editButton' onClick={this.onEdit}>edit</button>
