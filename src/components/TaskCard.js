@@ -30,7 +30,7 @@ class TaskCard extends React.Component {
         })
         .then(res => {
             if(res.ok) { console.log('Task edit successful') }
-            this.props.onChange()
+            this.props.updateTasks()
         })
         .catch(err => console.log(err))
     }
@@ -40,7 +40,7 @@ class TaskCard extends React.Component {
         axios.delete(url)
         .then(res => {
             if(res.ok) { console.log('Deletion successful') }
-            this.props.onChange()
+            this.props.updateTasks()
         })
     }
 
@@ -60,7 +60,7 @@ class TaskCard extends React.Component {
         })
         .then(res => {
             if(res.ok) { console.log('Task edit successful') }
-            this.props.onChange()
+            this.props.updateTasks()
         })
         .catch(err => console.log(err))
     }

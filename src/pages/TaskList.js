@@ -6,7 +6,8 @@ class TaskList extends React.Component {
     state = {
         // tasks: [],
         listOfTasks: [], // typically use 1 array
-        newTask: ''
+        newTask: '',
+        dataRetrievalError: false
     }
 
     async componentDidMount(){
@@ -21,9 +22,12 @@ class TaskList extends React.Component {
                 this.setState({ listOfTasks: jsonData })
                 console.log('*---- Request fulfilled ----*\n')
             }) 
-            .catch(err => console.log(err))
+            .catch(err => {
+                console.log(err)
+                this.setState({ dataRetrievalError: true }) // if unable to retrieve data, set error to true to display error message to users
+            })
         } catch(err){
-            console.log(err) // should somehow show users an error occured
+            console.log(err)
         }
     }
 
@@ -57,23 +61,34 @@ class TaskList extends React.Component {
     }
 
     render() {
-        return(
-            <div>
-                <form onSubmit={this.handleCreateTask}>
-                    <input id='newTask' type='text' placeholder="What needs to get done?" onChange={ this.onChange }
-                        style={{height: '45px', width:'70%', marginRight:'20px'}}></input>
+        if(this.state.dataRetrievalError){
+            return (
+                <div>
+                    <br/>
+                    <h3>Failed to retrieve tasks</h3>
+                </div>
+            )
+        }
+        else{
+            return(
+                <div>
+                    <br/>
+                    <form onSubmit={this.handleCreateTask}>
+                        <input id='newTask' type='text' placeholder="What needs to get done?" onChange={ this.onChange }
+                            style={{height: '45px', width:'70%', marginRight:'20px'}}></input>
 
-                    <input type='submit'/>
-                </form>
-                <br/> <br/>
+                        <input type='submit'/>
+                    </form>
+                    <br/>
 
-                {this.state.listOfTasks.map((task) => {
-                    console.log(task);
-                    return (<TaskCard card={task} key={task.id} onChange={this.reloadTask.bind(this)}/>)
-                })}
+                    {this.state.listOfTasks.map((task) => {
+                        console.log(task);
+                        return (<TaskCard card={task} key={task.id} updateTasks={this.reloadTask.bind(this)}/>)
+                    })}
 
-            </div>
-        )
+                </div>
+            )
+        }
     }
 }
 
